@@ -99,21 +99,18 @@ public class Athlete extends AbstractAthlete {
                 rightWeight.pickUp(this);
             }*/
 
-            if(this.id == maxID){
+            /** funktioniert für 2 tests
+             if(this.id == maxID){
                 do{
-                    //System.out.println("try to pick up right Weight");
                 } while (!rightWeight.pickUp(this));
                 do{
-                    //System.out.println("try to pick up left Weight");
                 } while (!leftWeight.pickUp(this));
             } else {
                 do{
-                    //System.out.println("try to pick up left Weight");
                 } while (!leftWeight.pickUp(this));
                 do{
-                    //System.out.println("try to pick up right Weight");
                 } while (!rightWeight.pickUp(this));
-            }
+            }*/
 
             /*if(this.id == maxID){
                 while(!rightWeight.pickUp(this)){
@@ -211,6 +208,7 @@ public class Athlete extends AbstractAthlete {
                 //notifyAllAthletes();
             }
         }
+        System.out.println("Athlete " + id + " is done");
     }
 
     public static void main(String[] args) {

@@ -21,7 +21,7 @@ public class Weight extends AbstractWeight {
      * @return false if the weight is held by an athlete, true otherwise.
      */
     @Override
-    public boolean isAvailable() {
+    public synchronized boolean isAvailable() {
         //synchronized (heldByAthlete){
             return heldByAthlete == null;
         //}
