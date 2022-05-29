@@ -3,6 +3,8 @@ package impl;
 import util.AbstractAthlete;
 import util.AbstractWeight;
 
+import java.util.ArrayList;
+
 /**
  * DO NOT CHANGE THE SIGNATURE OF THIS CLASS!
  *
@@ -17,8 +19,10 @@ import util.AbstractWeight;
  */
 public class Athlete extends AbstractAthlete {
     int cycles;
+    int id;
     AbstractWeight leftWeight;
     AbstractWeight rightWeight;
+    static ArrayList<Athlete> athletes = new ArrayList<>();
 
     static int maxID = 0;
 
@@ -35,6 +39,7 @@ public class Athlete extends AbstractAthlete {
         this.cycles = cycles;
         this.leftWeight = leftWeight;
         this.rightWeight = rightWeight;
+        this.id = id;
         if(maxID < id){
             maxID = id;
         }
@@ -62,30 +67,165 @@ public class Athlete extends AbstractAthlete {
         for(int i = 0; i < cycles; i++){
             stretch();
 
-            if(this.id == maxID){
+            /*if(this.id == maxID){
+                synchronized (rightWeight){
+                    do {
+                    } while(!rightWeight.isAvailable());
+                    rightWeight.pickUp(this);
+                    synchronized (leftWeight){
+                        do {
+                        } while(!leftWeight.isAvailable());
+                        leftWeight.pickUp(this);
+                    }
+                }
+            } else {
+                synchronized (leftWeight){
+                    do {
+                    } while(!leftWeight.isAvailable());
+                    leftWeight.pickUp(this);
+                    synchronized (rightWeight){
+                        do {
+                        } while(!rightWeight.isAvailable());
+                        rightWeight.pickUp(this);
+                    }
+                }
+            }*/
+
+            /*if(this.id == maxID){
                 rightWeight.pickUp(this);
                 leftWeight.pickUp(this);
             } else {
                 leftWeight.pickUp(this);
                 rightWeight.pickUp(this);
+            }*/
+
+            if(this.id == maxID){
+                do{
+                    //System.out.println("try to pick up right Weight");
+                } while (!rightWeight.pickUp(this));
+                do{
+                    //System.out.println("try to pick up left Weight");
+                } while (!leftWeight.pickUp(this));
+            } else {
+                do{
+                    //System.out.println("try to pick up left Weight");
+                } while (!leftWeight.pickUp(this));
+                do{
+                    //System.out.println("try to pick up right Weight");
+                } while (!rightWeight.pickUp(this));
             }
+
+            /*if(this.id == maxID){
+                while(!rightWeight.pickUp(this)){
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while(!leftWeight.pickUp(this)){
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                while(!leftWeight.pickUp(this)){
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while(!rightWeight.pickUp(this)){
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }*/
+
+            /*if(this.id == maxID) {
+                synchronized (rightWeight) {
+                    while (!rightWeight.isAvailable()) {
+                        try {
+                            athletes.add(this);
+                            System.out.println("hier Athlete" + id);
+                            wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                    rightWeight.pickUp(this);
+
+                    synchronized (leftWeight) {
+                        while (!leftWeight.isAvailable()) {
+                            try {
+                                athletes.add(this);
+                                System.out.println("hier Athlete" + id);
+                                wait();
+                            } catch (InterruptedException ignored) {
+                            }
+                        }
+                        leftWeight.pickUp(this);
+                    }
+                }
+            } else {
+                synchronized (leftWeight) {
+                    while (!leftWeight.isAvailable()) {
+                        try {
+                            athletes.add(this);
+                            System.out.println("hier Athlete" + id);
+                            wait();
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                    leftWeight.pickUp(this);
+
+                    synchronized (rightWeight) {
+                        while (!rightWeight.isAvailable()) {
+                            try {
+                                athletes.add(this);
+                                System.out.println("hier Athlete" + id);
+
+                                wait();
+                            } catch (InterruptedException ignored) {
+                            }
+                        }
+                        rightWeight.pickUp(this);
+                    }
+                }
+            }*/
 
             exercise();
 
             if(this.id == maxID){
                 rightWeight.putDown(this);
                 leftWeight.putDown(this);
+                //notifyAllAthletes();
+
             } else {
                 leftWeight.putDown(this);
                 rightWeight.putDown(this);
+                //notifyAllAthletes();
             }
         }
     }
 
     public static void main(String[] args) {
-        Athlete[] athletes = Gym.setup(5,3);
+        Athlete[] athletes = Gym.setup(5,4);
         for(Athlete athlete : athletes){
             athlete.start();
+        }
+    }
+
+    private synchronized void notifyAllAthletes(){
+        System.out.println(athletes);
+        int size = athletes.size();
+        for(int i = 0; i < size; i++){
+            athletes.get(0).notify();
+            athletes.remove(0);
         }
     }
 }
