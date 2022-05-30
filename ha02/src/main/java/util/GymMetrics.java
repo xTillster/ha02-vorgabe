@@ -24,11 +24,15 @@ public class GymMetrics {
     private static final LinkedList<AthleteAction> actions = new LinkedList<>();
 
     protected static void registerAthlete(AbstractAthlete athlete) {
-        athletes.add(athlete);
+        synchronized (athletes) {
+            athletes.add(athlete);
+        }
     }
 
     protected static void registerWeight(AbstractWeight weight) {
-        weights.add(weight);
+        synchronized (weights) {
+            weights.add(weight);
+        }
     }
 
     protected static void registerWeightPickedUp(AbstractAthlete athlete, AbstractWeight weight, boolean success) {
@@ -44,29 +48,45 @@ public class GymMetrics {
     }
 
     protected static void registerAthleteStretching(AbstractAthlete athlete) {
-        actions.add(new AthleteAction(athlete.getAthleteId(), -1, ActionType.STRETCH));
+        synchronized (actions) {
+            actions.add(new AthleteAction(athlete.getAthleteId(), -1, ActionType.STRETCH));
+        }
     }
 
     protected static void registerAthleteExercising(AbstractAthlete athlete) {
-        actions.add(new AthleteAction(athlete.getAthleteId(), -1, ActionType.EXERCISE));
+        synchronized (actions) {
+            actions.add(new AthleteAction(athlete.getAthleteId(), -1, ActionType.EXERCISE));
+        }
     }
 
     public static LinkedList<AbstractAthlete> getAthletes() {
-        return athletes;
+        synchronized (athletes) {
+            return athletes;
+        }
     }
 
     public static LinkedList<AbstractWeight> getWeights() {
-        return weights;
+        synchronized (weights) {
+            return weights;
+        }
     }
 
     public static LinkedList<AthleteAction> getActions() {
-        return actions;
+        synchronized (actions) {
+            return actions;
+        }
     }
 
     public static void reset() {
-        athletes.clear();
-        weights.clear();
-        actions.clear();
+        synchronized (athletes) {
+            athletes.clear();
+        }
+        synchronized (weights) {
+            weights.clear();
+        }
+        synchronized (actions) {
+            actions.clear();
+        }
     }
 
     public static class AthleteAction {

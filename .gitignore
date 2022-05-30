@@ -1,0 +1,5 @@
+# Project exclude paths
+/ha02/.gradle/
+/ha02/build/
+/ha02/build/classes/java/main/
+/ha02/build/classes/java/test/

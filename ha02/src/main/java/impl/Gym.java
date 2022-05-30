@@ -14,10 +14,10 @@ public class Gym {
      * @return Array of prepared athletes.
      */
     public static Athlete[] setup(int numAthletes, int cycles) {
-        if(numAthletes <= 0 && cycles <= 0){
-            return new Athlete[]{new Athlete(1,1, new Weight(1), new Weight(2))};
-        } else if (numAthletes <= 0) {
-            return new Athlete[]{new Athlete(1,cycles, new Weight(1), new Weight(2))};
+        if(numAthletes <= 0){
+            return new Athlete[]{new Athlete(1,Math.max(1, cycles), new Weight(1), new Weight(2))};
+        } else if (numAthletes == 1) {
+            return new Athlete[]{new Athlete(1,Math.max(1, cycles), new Weight(1), new Weight(2))};
         }
 
         Athlete[] athletes = new Athlete[numAthletes];
@@ -28,12 +28,7 @@ public class Gym {
         }
 
         for(int i = 0; i < numAthletes; i++){
-            athletes[i] = new Athlete(i+1, cycles, weights[(((i-1) % numAthletes+ numAthletes) % numAthletes)], weights[i]);
-            /*if(i == numAthletes - 1){
-                athletes[i] = new Athlete(i+1,cycles,weights[i], weights[0]);
-            } else {
-                athletes[i] = new Athlete(i+1,cycles,weights[i+1], weights[i]);
-            }*/
+            athletes[i] = new Athlete(i+1, Math.max(1, cycles), weights[(((i-1) % numAthletes+ numAthletes) % numAthletes)], weights[i]);
         }
 
         return athletes;

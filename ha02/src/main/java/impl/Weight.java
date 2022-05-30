@@ -22,9 +22,9 @@ public class Weight extends AbstractWeight {
      */
     @Override
     public synchronized boolean isAvailable() {
-        //synchronized (heldByAthlete){
-            return heldByAthlete == null;
-        //}
+        if(heldByAthlete == null) return true;
+        try{ wait();} catch (InterruptedException ignored){}
+        return false;
     }
 
     /**
@@ -39,8 +39,6 @@ public class Weight extends AbstractWeight {
             heldByAthlete = athlete;
             return true;
         }
-        //System.out.println("pick up not successful: Athlete " + athlete.getAthleteId() + " " + this);
-        try{ wait();} catch (InterruptedException ignored){}
         return false;
     }
 
@@ -56,7 +54,6 @@ public class Weight extends AbstractWeight {
         if(heldByAthlete == null) return false;
         if(heldByAthlete.equals(athlete)){
             heldByAthlete = null;
-            //System.out.println("put down successful");
             notifyAll();
             return true;
         }
